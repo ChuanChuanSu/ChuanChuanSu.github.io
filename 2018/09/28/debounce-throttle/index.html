@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="一、前言想必前端工程师看到这两个单词都是十分的熟悉。这两种技术，都是为了避免短时间内大量触发同一种操作所做的努力。特别是，当这一操作代价比较大，如涉及到DOM操作或浏览器回流等行为时，会造成极大的性能损耗，严重时甚至会导致浏览器的崩溃。 二、一些错误的认识debounce(防抖)和throttle(节流)，这两种方法的原理很类似。都是利用setTimeout和闭包控制事件处理程序的触发频率。然而两">
+<meta name="description" content="一、前言想必前端工程师看到这两个单词都是十分的熟悉。这两种技术，都是为了避免短时间内大量触发同一种操作所做的努力。特别是，当这一操作代价比较大，如涉及到DOM操作或浏览器回流等行为时，会造成极大的性能损耗，严重时甚至会导致浏览器的崩溃。">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="debounce &amp; throttle">
 <meta property="og:url" content="http://suchuanchuan.cn/2018/09/28/debounce-throttle/index.html">
 <meta property="og:site_name" content="SC&amp;JJ">
-<meta property="og:description" content="一、前言想必前端工程师看到这两个单词都是十分的熟悉。这两种技术，都是为了避免短时间内大量触发同一种操作所做的努力。特别是，当这一操作代价比较大，如涉及到DOM操作或浏览器回流等行为时，会造成极大的性能损耗，严重时甚至会导致浏览器的崩溃。 二、一些错误的认识debounce(防抖)和throttle(节流)，这两种方法的原理很类似。都是利用setTimeout和闭包控制事件处理程序的触发频率。然而两">
+<meta property="og:description" content="一、前言想必前端工程师看到这两个单词都是十分的熟悉。这两种技术，都是为了避免短时间内大量触发同一种操作所做的努力。特别是，当这一操作代价比较大，如涉及到DOM操作或浏览器回流等行为时，会造成极大的性能损耗，严重时甚至会导致浏览器的崩溃。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-27T16:40:40.634Z">
+<meta property="og:updated_time" content="2018-09-27T16:42:41.983Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="debounce &amp; throttle">
-<meta name="twitter:description" content="一、前言想必前端工程师看到这两个单词都是十分的熟悉。这两种技术，都是为了避免短时间内大量触发同一种操作所做的努力。特别是，当这一操作代价比较大，如涉及到DOM操作或浏览器回流等行为时，会造成极大的性能损耗，严重时甚至会导致浏览器的崩溃。 二、一些错误的认识debounce(防抖)和throttle(节流)，这两种方法的原理很类似。都是利用setTimeout和闭包控制事件处理程序的触发频率。然而两">
+<meta name="twitter:description" content="一、前言想必前端工程师看到这两个单词都是十分的熟悉。这两种技术，都是为了避免短时间内大量触发同一种操作所做的努力。特别是，当这一操作代价比较大，如涉及到DOM操作或浏览器回流等行为时，会造成极大的性能损耗，严重时甚至会导致浏览器的崩溃。">
 
 
 
@@ -363,6 +363,7 @@
 
       
         <h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>想必前端工程师看到这两个单词都是十分的熟悉。这两种技术，都是为了避免短时间内大量触发同一种操作所做的努力。特别是，当这一操作代价比较大，如涉及到DOM操作或浏览器回流等行为时，会造成极大的性能损耗，严重时甚至会导致浏览器的崩溃。</p>
+<a id="more"></a>
 <h1 id="二、一些错误的认识"><a href="#二、一些错误的认识" class="headerlink" title="二、一些错误的认识"></a>二、一些错误的认识</h1><p>debounce(防抖)和throttle(节流)，这两种方法的原理很类似。都是利用setTimeout和闭包控制事件处理程序的触发频率。然而两种方法的具体实现方法及最终效果又有细微的不同。正因为两种方法是如此的类似，以及网上资料的混乱，加重了初学者的学习成本。</p>
 <ul>
 <li><a href="http://www.alloyteam.com/2012/11/javascript-throttle/" target="_blank" rel="noopener">浅谈javascript的函数节流</a> 腾讯AlloyTeam团队blog</li>

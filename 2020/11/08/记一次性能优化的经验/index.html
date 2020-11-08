@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="git," />
+  <meta name="keywords" content="性能优化," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="之前写《线上故障回滚处理方法》时，提到了git reset方法，但是并没有讲的很清楚。感觉还是有必要把涉及到回滚的几个git指令好好梳理一遍。">
-<meta name="keywords" content="git">
+<meta name="description" content="前言前端页面性能问题一直是影响用户体验的一大因素，优化页面性能也是前端工程师一直追求的方向。本文以一些优化手段为基础，说明一些weex页面性能优化的相关知识。内容可能存在误差和不够全面的情况，欢迎指正。">
+<meta name="keywords" content="性能优化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git回滚指令详解">
-<meta property="og:url" content="http://suchuanchuan.cn/2020/11/08/git回滚指令详解/index.html">
+<meta property="og:title" content="记一次性能优化的经验">
+<meta property="og:url" content="http://suchuanchuan.cn/2020/11/08/记一次性能优化的经验/index.html">
 <meta property="og:site_name" content="SC&amp;JJ">
-<meta property="og:description" content="之前写《线上故障回滚处理方法》时，提到了git reset方法，但是并没有讲的很清楚。感觉还是有必要把涉及到回滚的几个git指令好好梳理一遍。">
+<meta property="og:description" content="前言前端页面性能问题一直是影响用户体验的一大因素，优化页面性能也是前端工程师一直追求的方向。本文以一些优化手段为基础，说明一些weex页面性能优化的相关知识。内容可能存在误差和不够全面的情况，欢迎指正。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-11-08T06:20:48.182Z">
+<meta property="og:updated_time" content="2020-11-08T06:46:01.507Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git回滚指令详解">
-<meta name="twitter:description" content="之前写《线上故障回滚处理方法》时，提到了git reset方法，但是并没有讲的很清楚。感觉还是有必要把涉及到回滚的几个git指令好好梳理一遍。">
+<meta name="twitter:title" content="记一次性能优化的经验">
+<meta name="twitter:description" content="前言前端页面性能问题一直是影响用户体验的一大因素，优化页面性能也是前端工程师一直追求的方向。本文以一些优化手段为基础，说明一些weex页面性能优化的相关知识。内容可能存在误差和不够全面的情况，欢迎指正。">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://suchuanchuan.cn/2020/11/08/git回滚指令详解/"/>
+  <link rel="canonical" href="http://suchuanchuan.cn/2020/11/08/记一次性能优化的经验/"/>
 
 
 
 
 
-  <title>git回滚指令详解 | SC&JJ</title>
+  <title>记一次性能优化的经验 | SC&JJ</title>
   
 
 
@@ -273,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://suchuanchuan.cn/2020/11/08/git回滚指令详解/">
+    <link itemprop="mainEntityOfPage" href="http://suchuanchuan.cn/2020/11/08/记一次性能优化的经验/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Leo">
@@ -290,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">git回滚指令详解</h1>
+          <h1 class="post-title" itemprop="name headline">记一次性能优化的经验</h1>
         
 
         <div class="post-meta">
@@ -302,7 +302,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-08T14:12:34+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-08T14:39:25+08:00">
                 2020-11-08
               </time>
             
@@ -362,12 +362,13 @@
       
 
       
-        <p>之前写《线上故障回滚处理方法》时，提到了git reset方法，但是并没有讲的很清楚。感觉还是有必要把涉及到回滚的几个git指令好好梳理一遍。<br><a id="more"></a></p>
-<h2 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h2><p>顾名思义，git reset是用来回退版本指令。</p>
-<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>首先通过git log –pretty=oneline指令获取到所有的commit ID:<br>从其中我们发现，指向当前版本的HEAD指针指向了“Revert ’test:修改index.js‘”这个版本，而远端分支指向了“test:修改index.js”。尝试将本地分支回滚到这一版本<br>git reset –hard 6d62b553f29a666de0087a191439ec687a3fcfff<br>再次使用git log –pretty=oneline指令<br>我们发现HEAD指针已经指向了“test:修改index.js”这次commit。<br>回滚完成。</p>
-<h3 id="–hard、–mixed和–soft"><a href="#–hard、–mixed和–soft" class="headerlink" title="–hard、–mixed和–soft"></a>–hard、–mixed和–soft</h3><p>在上面的回滚中，使用的是git reset –hard commit-ID指令，其中的参数–hard是什么意思呢？<br>git reset用于撤销未被提交到remote的改动，即撤销local的修改。除了移动当前分支的HEAD，还可以更改workspace和index。其实这里一共有三种参数，–hard、–mixed和–soft，它们对应了对HEAD、index和workspace的不同处理：<br>soft模式：修改HEAD，不修改index和workspace。<br>mixed(默认模式)：修改HEAD和index，不修改workspace。默认行为。<br>hard模式：修改HEAD、index、workspace。<br>Talk is cheap,show me your code!<br>首先我们看一下当前的log历史，同时我们保证当前index和workspace无改动<br>soft:<br>mixed：<br>hard:<br>可以看到：<br>在soft模式下，HEAD被重新指向“test:修改readme.md”（“我又被修改了一次”退回到index）;<br>mixed模式下，不仅HEAD被重新指定、“我又被修改了一次”退回到index，而且index暂存区的“我又被修改了一次”也被修改，退回到workspace；<br>而hard模式最为简单粗暴，HEAD、index以及workspace都被退回，与“我又被修改了一次”这次commit有关的所以痕迹都被抹除。<br>这三种模式各有千秋，可以根据需要自行决定采用哪种方式。<br>撤销回滚与git reflog<br>其实撤销回滚与回滚的操作一样，都是git reset。但是可能出现一种极端情况影响撤销：git log不会展示已撤销了的commit ID，因此无法通过git reset –hard future-commit-id的方式撤销回滚。因此要介绍一个可以获取已回滚commit ID的方法：<br>git reflog<br>git reflog会记录每一次变动的commit ID。<br>从其中我们可以找到已经撤销的commit ID，之后便可以执行撤销回滚操作。</p>
-<h2 id="git-revert"><a href="#git-revert" class="headerlink" title="git revert"></a>git revert</h2><p>git revert是另一种用于回滚的操作方法，那么它与git reset有什么区别呢？<br>想象这样一种场景：你希望将远端dev分支由最新的ID2回滚到ID1，首先拉取远端dev分支到本地的dev分支，接着执行git reset –hard ID1将本地分支回滚到ID1。当你push的时候发现提示无法推送，于是你执行了git push -f。这样，远端的dev分支也回滚到了ID1。<br>这种做法在单人开发时是没有问题的，但是当存在多人合作开发时会遇到一些问题：其他开发人员在他们的本地dev开发完推送到远端后，会撤销对ID2的回滚。原因是这位同学的本地代码没有回滚到ID1，还是基于ID2的版本，连带着将ID2也重新推送到远端dev。可能会导致ID2的错误代码被发布到线上，造成故障。为了避免这种情况，我们在回滚时可以使用git revert指令。<br>git revert可以回滚某次commit。与reset不同的是，reset是直接将HEAD指向想要回滚到的目标commit ID，而revert则是新建一次与想要回滚commit相反的commit。有点绕口，我们来个例子。<br>我们可以看到当前README文件有两行内容，其中第一行“我是被修改的README.md”对应的是“test:修改readme.md”这一commit，而“我又被修改了一次”则对应“我又被修改了一次”这一commit。我们想要回滚到“test:修改readme.md”（即去掉“我又被修改了一次”），可以执行<br>git revert HEAD<br>接着我们来看一下当前的commit历史以及README文件。<br>可以发现，与reset相比“test:修改readme.md”这次commit还在，而且多了一次“Revert “我又被修改了一次””commit，并且README中后来的修改也没了。<br>这样我们就在没有损害commit历史的基础上实现了回滚操作，同时还避免了被其他同学重新提交代码时覆盖的风险，这是因为其他同学在push之前首先要强制合并这次revert提交。</p>
-<p>PS：一些使用指令<br>git log –all –graph –pretty=oneline<br>图形化展示不同分支的commit关系<br>git diff HEAD – file<br>比较的是工作区中的文件与版本库中文件的差异。<br>如：git diff HEAD – README.md<br>git stash &amp;&amp; git stash pop<br>保存与恢复现场</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前端页面性能问题一直是影响用户体验的一大因素，优化页面性能也是前端工程师一直追求的方向。本文以一些优化手段为基础，说明一些weex页面性能优化的相关知识。内容可能存在误差和不够全面的情况，欢迎指正。<br><a id="more"></a></p>
+<h2 id="优化方向"><a href="#优化方向" class="headerlink" title="优化方向"></a>优化方向</h2><p>要想缩短页面的首屏时间，首先要知道首屏时间包括哪些组成部分。通过分析每个不同阶段的时长，找到阻塞页面加载的关键节点并加以优化。<br>首屏时间主要包括了资源加载时间、数据请求时间和页面渲染时间。其中资源加载时间主要是页面加载过程中下载js bundle的耗时，主要影响因素是网速以及页面js bundle大小。数据请求时间是js代码向服务端发送数据请求、等待响应的耗时。页面渲染时间是在收到服务端数据后将其render到页面的耗时。优化切入点也主要是这三点。<br>下面我们将针对三个阶段，分别说明一些优化手段。</p>
+<h2 id="具体方法"><a href="#具体方法" class="headerlink" title="具体方法"></a>具体方法</h2><h3 id="资源加载阶段"><a href="#资源加载阶段" class="headerlink" title="资源加载阶段"></a>资源加载阶段</h3><p>影响资源加载耗时的因素有网络情况以及js bundle size。因此可以通过降低js bundle size来缩短资源加载耗时。<br>在页面打包构建的过程中，会将页面依赖的组件、模块等打包进最终的js bundle中。在页面加载过程中，会从CDN拉取对应js资源用以渲染。在某些情况中，页面会打包多余的模块到js bundle中。比如页面中点击某个按钮会弹出弹窗，弹窗并不是页面初始加载阶段就需要渲染的，同时也不是百分之百需要渲染，需要有点击事件发生后才会需要。对于这中类型的模块，可以通过异步加载的形式减少js bundle size，优化资源加载时间。针对这些组件进行代码分割，将其单独打包发布到CDN，在需要渲染的情况下才按需加载需要的组件。<br>具体的可以使用require.ensure引入希望分离出主bundle的模块。通过这种方式引入的依赖会被打包到单独的bundle中，只有在需要时才会被加载。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">require.ensure([], (require) =&gt; &#123;</span><br><span class="line">  pay = require(&apos;@ali/universal-pay&apos;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>但是这样又会产生新的问题：由于模块是异步加载的，需要额外判断加载完成的时机，否则可能出现资源还没有返回但是已经开始渲染最终导致白屏的情况。因此还需要有一个保证资源加载完成后再渲染的工具。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">function createAsyncComponent(loadComp) &#123;</span><br><span class="line">  return class AsyncComponent extends Component &#123;</span><br><span class="line">    state = &#123;</span><br><span class="line">      COMP: null,</span><br><span class="line">    &#125;</span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">      loadComp((COMP) =&gt; &#123;</span><br><span class="line">        this.setState(&#123;</span><br><span class="line">          COMP,</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    render() &#123;</span><br><span class="line">      const &#123; COMP &#125; = this.state;</span><br><span class="line">      if (!COMP) &#123;</span><br><span class="line">        return null;</span><br><span class="line">      &#125;</span><br><span class="line">      const props = &#123; ...this.props &#125;;</span><br><span class="line">      return &lt;COMP &#123;...props&#125; /&gt;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最终引入依赖的方式是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">createAsyncComponent((resolve) =&gt; &#123;</span><br><span class="line">  require.ensure([], (require) =&gt; &#123;</span><br><span class="line">    resolve(require(&apos;XXX&apos;));</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="数据请求阶段"><a href="#数据请求阶段" class="headerlink" title="数据请求阶段"></a>数据请求阶段</h3><p>加载完js bundle后，代码便会在本地执行。这时候便会产生网络请求耗时。一般情况情况下一条网络请求会耗时600ms左右，耗时会随着网速的降低而增加；另一方面，在某些场景下存在某些串行的数据请求，即后一条请求入参依赖于前一条请求返回的响应结果，这是网络请求耗时就会加倍。只有拿到数据响应后，页面才能进一步进行渲染。<br>为了解决这个问题，可以使用数据预加载。它的原理是在页面加载js bundle的同时，客户端就会发出数据请求，并将返回的数据写入客户端的缓存中；等到js代码执行到数据请求时，会首先查看本地缓存中是否有缓存的数据，等到轮询一秒还找不到数据，这时才会发出网络请求。</p>
+<h3 id="页面渲染阶段"><a href="#页面渲染阶段" class="headerlink" title="页面渲染阶段"></a>页面渲染阶段</h3><p>影响页面渲染耗时的因素主要有页面节点数以及屏外元素阻塞首屏渲染等。<br>weex存在两种渲染模式，分别是node模式和tree模式。其中tree模式会在整个树的Dom解析完再通知 native 渲染，只需要和native进行一次通信，但是如果dom 树过大，会阻塞页面的渲染。而node模式每个节点都是逐个解析完就通知 native 渲染。对于长列表页，由于首屏请求的数据可以占到两屏甚至更多，首屏外的元素会阻塞首屏渲染。通过设置列表为node模式，可以使得首屏列表项的渲染不受屏外元素阻塞。<br>同时不必要的节点也会对页面渲染耗时产生影响。weex中平均每个节点需要3ms的渲染耗时，如果长列表页中每个卡片有几个不必要的节点，最终整个列表多出的节点也会对页面渲染速度造成影响。多余的动画也会拉长页面首屏时间。可以通过减少不必要的页面节点和动画，加快首屏的渲染速度。</p>
 
       
     </div>
@@ -385,7 +386,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/git/" rel="tag"># git</a>
+            <a href="/tags/性能优化/" rel="tag"># 性能优化</a>
           
         </div>
       
@@ -398,8 +399,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/28/debounce-throttle/" rel="next" title="debounce & throttle">
-                <i class="fa fa-chevron-left"></i> debounce & throttle
+              <a href="/2020/11/08/git回滚指令详解/" rel="next" title="git回滚指令详解">
+                <i class="fa fa-chevron-left"></i> git回滚指令详解
               </a>
             
           </div>
@@ -407,10 +408,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/11/08/记一次性能优化的经验/" rel="prev" title="记一次性能优化的经验">
-                记一次性能优化的经验 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -546,7 +543,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-reset"><span class="nav-number">1.</span> <span class="nav-text">git reset</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本用法"><span class="nav-number">1.1.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#–hard、–mixed和–soft"><span class="nav-number">1.2.</span> <span class="nav-text">–hard、–mixed和–soft</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-revert"><span class="nav-number">2.</span> <span class="nav-text">git revert</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化方向"><span class="nav-number">2.</span> <span class="nav-text">优化方向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体方法"><span class="nav-number">3.</span> <span class="nav-text">具体方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#资源加载阶段"><span class="nav-number">3.1.</span> <span class="nav-text">资源加载阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据请求阶段"><span class="nav-number">3.2.</span> <span class="nav-text">数据请求阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面渲染阶段"><span class="nav-number">3.3.</span> <span class="nav-text">页面渲染阶段</span></a></li></ol></li></ol></div>
             
 
           </div>
